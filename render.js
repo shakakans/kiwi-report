@@ -20,11 +20,23 @@ function headlineClass(item) {
   return 'hl';
 }
 
+// Credits other outlets running the same story (from the merge step),
+// or falls back to a numeric trending badge for keyword-trending stories.
+function sourceLine(item) {
+  if (item.also && item.also.length) {
+    const names = item.also.slice(0, 3).map(esc).join(', ');
+    const extra = item.also.length > 3 ? ' +' + (item.also.length - 3) : '';
+    return ` &middot; <b class="flame">&#9650;</b> ALSO ${names}${extra}`;
+  }
+  if (item.heat >= 4) return ` &middot; <b class="flame">&#9650; ${item.heat} SOURCES</b>`;
+  return '';
+}
+
 function renderItem(item) {
   return `<li>
     ${item.showImage && item.image ? `<a href="${esc(item.link)}" target="_blank" rel="noopener"><img class="thumb" src="${esc(item.image)}" alt="" loading="lazy"></a>` : ''}
     <a class="${headlineClass(item)}" href="${esc(item.link)}" target="_blank" rel="noopener">${esc(item.title)}</a>
-    <span class="meta">${esc(item.tag)} &middot; ${timeAgo(item.time)}${item.heat >= 4 ? ' &middot; <b class="flame">&#9650; ' + item.heat + ' SOURCES</b>' : ''}</span>
+    <span class="meta">${esc(item.tag)} &middot; ${timeAgo(item.time)}${sourceLine(item)}</span>
   </li>`;
 }
 
@@ -73,7 +85,7 @@ function renderPage(state) {
   <div class="siren">
     ${main.image ? `<a href="${esc(main.link)}" target="_blank" rel="noopener"><img class="mainimg" src="${esc(main.image)}" alt=""></a>` : ''}
     <a class="mainhl" href="${esc(main.link)}" target="_blank" rel="noopener">${esc(main.title)}</a>
-    <div class="mainmeta">${esc(main.tag)} &middot; ${main.heat} SOURCES ON THIS STORY</div>
+    <div class="mainmeta">${esc(main.tag)}${main.also && main.also.length ? ' &middot; ALSO ' + main.also.slice(0, 4).map(esc).join(', ') : ''} &middot; ${main.heat} SOURCES ON THIS STORY</div>
     ${main.related.length ? `<ul class="relatedlist">${main.related.map(r =>
       `<li><a href="${esc(r.link)}" target="_blank" rel="noopener">${esc(r.title)}</a> <span class="meta">${esc(r.tag)}</span></li>`).join('')}</ul>` : ''}
   </div>
