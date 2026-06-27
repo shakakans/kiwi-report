@@ -1,5 +1,6 @@
-/* Drudge feel: Courier, all caps, underlined links, three ruled columns.
-   Modern feel: clean spacing, hover states, dark mode, responsive. */
+/* Drudge feel: all caps, underlined links, three ruled columns.
+   Modern feel: Apple's San Francisco system font, clean spacing,
+   hover states, dark mode, responsive. */
 
 :root {
   --bg: #ffffff;
@@ -26,7 +27,10 @@ html {
 body {
   background: var(--bg);
   color: var(--fg);
-  font-family: 'Courier New', Courier, monospace;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display',
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-size: 17px;
   width: 100%;
   max-width: 1100px;
   margin: 0 auto;
@@ -40,8 +44,8 @@ a { color: var(--fg); }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 11px;
-  letter-spacing: 1px;
+  font-size: 12.5px;
+  letter-spacing: .5px;
   color: var(--muted);
   border-bottom: 1px solid var(--rule);
   padding-bottom: 6px;
@@ -75,15 +79,15 @@ a { color: var(--fg); }
 .mainhl:hover { color: var(--red); }
 .mainmeta {
   margin-top: 8px;
-  font-size: 11px;
-  letter-spacing: 2px;
+  font-size: 12.5px;
+  letter-spacing: 1.5px;
   color: var(--muted);
 }
 .relatedlist {
   list-style: none;
   padding: 12px 0 0;
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
 }
 .relatedlist li { margin: 4px 0; }
 .relatedlist a { text-transform: uppercase; font-weight: bold; }
@@ -101,8 +105,8 @@ a { color: var(--fg); }
 
 .trendbar {
   text-align: center;
-  font-size: 11px;
-  letter-spacing: 1px;
+  font-size: 12.5px;
+  letter-spacing: .5px;
   color: var(--muted);
   margin-bottom: 18px;
 }
@@ -134,10 +138,10 @@ a { color: var(--fg); }
 
 .hl {
   display: block;
-  font-weight: bold;
-  font-size: 14px;
+  font-weight: 700;
+  font-size: 16px;
   text-transform: uppercase;
-  line-height: 1.35;
+  line-height: 1.32;
   text-decoration: underline;
 }
 .hl:hover { color: var(--red); }
@@ -146,15 +150,15 @@ a { color: var(--fg); }
 
 .meta {
   display: block;
-  font-size: 10px;
-  letter-spacing: 1px;
+  font-size: 11.5px;
+  letter-spacing: .5px;
   color: var(--muted);
-  margin-top: 2px;
+  margin-top: 3px;
   text-decoration: none;
 }
 .flame { color: var(--red); }
 
-footer { text-align: center; font-size: 11px; letter-spacing: 1px; margin-top: 30px; }
+footer { text-align: center; font-size: 12.5px; letter-spacing: .5px; margin-top: 30px; }
 footer hr { border: none; border-top: 3px solid var(--rule); }
 
 .loading {
