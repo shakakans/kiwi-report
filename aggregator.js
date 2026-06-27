@@ -17,6 +17,18 @@ const parser = new Parser({
 const MAX_AGE_HOURS = 36;
 const REFRESH_MS = 10 * 60 * 1000;
 
+// --- Ranking balance ------------------------------------------------
+// Each story's rank blends two things, both scaled 0–1 so neither can
+// run away: how RECENT it is, and how WIDELY it's covered across
+// independent outlets. Raise RECENCY_WEIGHT to push fresh news up;
+// raise COVERAGE_WEIGHT to keep big shared stories up even as they age.
+// (The two weights don't have to add to 1, but it's tidy if they do.)
+const RECENCY_WEIGHT = 0.6;
+const COVERAGE_WEIGHT = 0.4;
+// Hours for the recency score to halve. Smaller = the page churns to
+// fresh news faster; larger = important stories linger longer.
+const RECENCY_HALFLIFE_H = 8;
+
 const STOPWORDS = new Set((
   'a an the and or but nor for yet so of in on at to from by with about into over after before ' +
   'under between during without within along across behind beyond near above below off out up down ' +
@@ -102,6 +114,45 @@ function dedupe(items) {
   return out;
 }
 
+// How much do two headlines overlap in significant words?
+function tokenOverlap(a, b) {
+  if (!a.length || !b.length) return { shared: 0, jac: 0 };
+  const setB = new Set(b);
+  let shared = 0;
+  for (const t of a) if (setB.has(t)) shared++;
+  const union = a.length + b.length - shared;
+  return { shared, jac: union ? shared / union : 0 };
+}
+
+// Same real-world event? True when two headlines share most of their
+// keywords, even if the wording differs ("drug overdose" vs "GHB
+// overdose"). Tuned to merge re-tellings without merging different
+// stories that happen to share a word or two.
+function sameEvent(a, b) {
+  const { shared, jac } = tokenOverlap(a.tokens, b.tokens);
+  return shared >= 2 && (jac >= 0.55 || shared >= 4);
+}
+
+// Collapse near-duplicate headlines of the same event into one line.
+// MUST run AFTER scoring so cross-source trend detection still sees
+// every outlet's wording. Keeps the highest-ranked version as the
+// headline (input is score-sorted) and records the other outlets in
+// `also` so the survivor can credit them and show true coverage breadth.
+function mergeSimilar(items) {
+  const kept = [];
+  for (const item of items) {
+    const rep = kept.find(k => sameEvent(k, item));
+    if (rep) {
+      if (item.tag !== rep.tag && !rep.also.includes(item.tag)) rep.also.push(item.tag);
+      rep.heat = Math.max(rep.heat, 1 + rep.also.length); // badge reflects real outlet count
+    } else {
+      item.also = [];
+      kept.push(item);
+    }
+  }
+  return kept;
+}
+
 function score(items) {
   // token -> set of source tags mentioning it
   const tokenSources = new Map();
@@ -113,18 +164,31 @@ function score(items) {
   }
 
   const now = Date.now();
+
+  // Pass 1: measure how widely each story is covered across outlets.
+  // A story is "trending" when several independent outlets share its nouns.
+  let maxCross = 0;
   for (const item of items) {
-    // A story is "trending" when several independent outlets share its nouns.
     const counts = item.tokens
       .map(t => tokenSources.get(t).size)
       .sort((a, b) => b - a)
       .slice(0, 3);
-    const cross = counts.reduce((s, c) => s + (c - 1) * (c - 1), 0);
-    const ageHours = (now - item.time) / 3600000;
+    item.cross = counts.reduce((s, c) => s + (c - 1) * (c - 1), 0);
     // Heat = second-best keyword overlap, so one ubiquitous name
     // ("trump") doesn't mark every story as breaking.
     item.heat = counts.length >= 2 ? counts[1] : (counts[0] || 1);
-    item.score = (1 + cross) * Math.exp(-ageHours / 10);
+    if (item.cross > maxCross) maxCross = item.cross;
+  }
+
+  // Pass 2: blend recency and coverage on the same 0–1 scale. This is
+  // the balance: fresh-but-quiet and older-but-widely-covered both get a
+  // fair shot, while genuinely old + lightly covered stories sink.
+  const crossNorm = Math.log(1 + maxCross) || 1;
+  for (const item of items) {
+    const ageHours = (now - item.time) / 3600000;
+    const recencyScore = Math.pow(0.5, ageHours / RECENCY_HALFLIFE_H); // 1 (now) -> 0 (old)
+    const coverageScore = Math.log(1 + item.cross) / crossNorm;        // 0 (solo) -> 1 (most covered)
+    item.score = RECENCY_WEIGHT * recencyScore + COVERAGE_WEIGHT * coverageScore;
   }
 
   const trendingTokens = [...tokenSources.entries()]
@@ -157,8 +221,9 @@ async function refresh() {
   }
 
   let items = dedupe(all);
-  const trendingTokens = score(items);
+  const trendingTokens = score(items);   // trending uses every outlet's wording
   items.sort((a, b) => b.score - a.score);
+  items = mergeSimilar(items);           // then collapse same-event re-tellings
 
   const main = items.find(i => i.heat >= 3) || items[0];
   const rel = related(main, items, 6);
