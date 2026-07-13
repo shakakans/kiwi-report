@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-label="The Kiwi Report">
+  <defs>
+    <symbol id="s" viewBox="0 0 100 100">
+      <path d="M50 2 L60.78 35.16 L95.65 35.16 L67.45 55.67 L78.21 88.83 L50 68.35 L21.79 88.83 L32.55 55.67 L4.35 35.16 L39.22 35.16 Z"/>
+    </symbol>
+  </defs>
+  <rect width="1000" height="1000" fill="#0b0b0c"/>
+  <rect x="46" y="46" width="908" height="908" fill="none" stroke="#ffffff" stroke-width="14"/>
+  <rect x="74" y="74" width="852" height="852" fill="none" stroke="#ffffff" stroke-width="3"/>
+  <g fill="#ff2b2b">
+    <use href="#s" x="465" y="150" width="70" height="70"/>
+    <use href="#s" x="465" y="320" width="70" height="70"/>
+    <use href="#s" x="368" y="235" width="70" height="70"/>
+    <use href="#s" x="562" y="235" width="70" height="70"/>
+    <use href="#s" x="545" y="196" width="40" height="40"/>
+  </g>
+  <line x1="180" y1="452" x2="820" y2="452" stroke="#ffffff" stroke-width="4"/>
+  <text x="500" y="540" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="46" font-weight="700" letter-spacing="18" fill="#ffffff">THE</text>
+  <text x="500" y="700" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="168" font-weight="900" letter-spacing="2" fill="#ffffff">KIWI</text>
+  <text x="500" y="788" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="70" font-weight="800" letter-spacing="20" fill="#ffffff">REPORT</text>
+  <rect x="454" y="828" width="92" height="8" fill="#ff2b2b"/>
+  <text x="500" y="892" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="30" font-weight="600" letter-spacing="9" fill="#9a9aa0">AOTEAROA · NEW ZEALAND</text>
+</svg>

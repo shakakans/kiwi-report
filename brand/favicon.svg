@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Kiwi Report">
+  <rect width="64" height="64" rx="13" fill="#0b0b0c"/>
+  <rect x="5" y="5" width="54" height="54" rx="9" fill="none" stroke="#ffffff" stroke-width="2"/>
+  <text x="32" y="42" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="30" font-weight="900" letter-spacing="-1.5" fill="#ffffff">KR</text>
+  <rect x="21" y="48" width="22" height="4" fill="#ff2b2b"/>
+</svg>

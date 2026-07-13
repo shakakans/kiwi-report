@@ -1,0 +1,352 @@
+<title>The Kiwi Report — Brand Kit</title>
+<style>
+  :root{
+    --bg:#f3f3f2; --surface:#ffffff; --text:#0b0b0c; --muted:#6b6b70;
+    --line:#e4e4e6; --accent:#cc0000; --checker:#eeeeef;
+    --sans:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{ --bg:#0a0a0b; --surface:#151517; --text:#f2f2f3; --muted:#9a9aa0;
+      --line:#2a2a2e; --accent:#ff3b30; --checker:#101012; }
+  }
+  :root[data-theme="light"]{
+    --bg:#f3f3f2; --surface:#ffffff; --text:#0b0b0c; --muted:#6b6b70;
+    --line:#e4e4e6; --accent:#cc0000; --checker:#eeeeef;
+  }
+  :root[data-theme="dark"]{
+    --bg:#0a0a0b; --surface:#151517; --text:#f2f2f3; --muted:#9a9aa0;
+    --line:#2a2a2e; --accent:#ff3b30; --checker:#101012;
+  }
+
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans);
+    -webkit-font-smoothing:antialiased; line-height:1.5; }
+  .wrap{ max-width:1060px; margin:0 auto; padding:56px 24px 80px; }
+
+  /* ---- masthead ---- */
+  .kit-head{ border-bottom:3px solid var(--text); padding-bottom:22px; margin-bottom:14px; }
+  .eyebrow{ font-size:12px; font-weight:700; letter-spacing:4px; text-transform:uppercase;
+    color:var(--accent); margin:0 0 12px; }
+  .kit-head h1{ font-size:clamp(34px,7vw,66px); font-weight:900; letter-spacing:2px;
+    text-transform:uppercase; margin:0; line-height:.98; text-wrap:balance; }
+  .kit-head p{ margin:14px 0 0; color:var(--muted); font-size:15px; letter-spacing:.3px; max-width:60ch; }
+  .stars-inline{ height:18px; vertical-align:-2px; margin-left:2px; }
+
+  /* ---- section ---- */
+  section{ margin-top:52px; }
+  .sec-label{ font-size:12px; font-weight:700; letter-spacing:3px; text-transform:uppercase;
+    color:var(--muted); margin:0 0 18px; display:flex; align-items:center; gap:12px; }
+  .sec-label::after{ content:""; flex:1; height:1px; background:var(--line); }
+
+  /* ---- cards / grid ---- */
+  .grid{ display:grid; gap:18px; }
+  .two{ grid-template-columns:repeat(2,1fr); }
+  @media (max-width:640px){ .two{ grid-template-columns:1fr; } }
+
+  .card{ background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    overflow:hidden; display:flex; flex-direction:column; }
+  .card .frame{ padding:22px; display:flex; align-items:center; justify-content:center;
+    background:
+      linear-gradient(45deg,var(--checker) 25%,transparent 25%,transparent 75%,var(--checker) 75%) 0 0/22px 22px,
+      linear-gradient(45deg,var(--checker) 25%,transparent 25%,transparent 75%,var(--checker) 75%) 11px 11px/22px 22px,
+      var(--surface); }
+  .card .art{ width:100%; height:auto; display:block; border-radius:4px;
+    box-shadow:0 1px 0 rgba(0,0,0,.04); }
+  .card.square .art{ max-width:340px; }
+  .meta{ display:flex; justify-content:space-between; align-items:baseline; gap:12px;
+    padding:14px 18px; border-top:1px solid var(--line); }
+  .meta .name{ font-size:14px; font-weight:700; letter-spacing:.3px; }
+  .meta .name small{ display:block; font-weight:400; color:var(--muted); letter-spacing:0;
+    margin-top:3px; font-size:12.5px; }
+  .dims{ font-size:12px; font-weight:600; color:var(--muted); white-space:nowrap;
+    font-variant-numeric:tabular-nums; border:1px solid var(--line); border-radius:999px; padding:3px 10px; }
+
+  /* ---- palette ---- */
+  .swatches{ display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
+  @media (max-width:640px){ .swatches{ grid-template-columns:repeat(2,1fr); } }
+  .sw{ border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--surface); }
+  .sw .chip{ height:72px; }
+  .sw .lab{ padding:10px 12px; }
+  .sw .lab b{ font-size:13px; font-weight:700; }
+  .sw .lab span{ display:block; font-size:12px; color:var(--muted);
+    font-variant-numeric:tabular-nums; letter-spacing:.4px; margin-top:2px; }
+
+  /* ---- type spec ---- */
+  .type{ background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:26px; }
+  .type .row{ display:flex; align-items:baseline; gap:18px; padding:12px 0; border-top:1px solid var(--line);
+    flex-wrap:wrap; }
+  .type .row:first-of-type{ border-top:none; }
+  .type .row .k{ width:120px; flex:none; font-size:12px; font-weight:700; letter-spacing:2px;
+    text-transform:uppercase; color:var(--muted); }
+  .type .spec-xl{ font-size:clamp(30px,6vw,52px); font-weight:900; letter-spacing:1px; text-transform:uppercase; }
+  .type .spec-l{ font-size:26px; font-weight:800; letter-spacing:6px; text-transform:uppercase; }
+  .type .spec-m{ font-size:15px; font-weight:600; letter-spacing:4px; text-transform:uppercase; color:var(--muted); }
+
+  /* ---- favicon chips ---- */
+  .fav-live{ display:flex; align-items:flex-end; gap:22px; flex-wrap:wrap; }
+  .fav-live .u{ text-align:center; }
+  .fav-live img{ display:block; image-rendering:auto; }
+  .fav-live .u span{ display:block; margin-top:8px; font-size:11px; color:var(--muted);
+    font-variant-numeric:tabular-nums; }
+
+  /* ---- files ---- */
+  .files{ background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:22px 24px; }
+  .files ul{ margin:0; padding:0; list-style:none; }
+  .files li{ display:flex; justify-content:space-between; gap:14px; padding:11px 0;
+    border-top:1px solid var(--line); font-size:14px; flex-wrap:wrap; }
+  .files li:first-child{ border-top:none; }
+  .files code{ font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:13px; }
+  .files .use{ color:var(--muted); font-size:13px; }
+  .note{ color:var(--muted); font-size:13.5px; margin-top:18px; max-width:70ch; }
+
+  @media (prefers-reduced-motion:no-preference){
+    .card,.sw,.type,.files{ animation:rise .5s cubic-bezier(.2,.7,.2,1) both; }
+    @keyframes rise{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  }
+</style>
+
+<!-- global Southern Cross star, referenced by every asset -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="tkr-star" viewBox="0 0 100 100">
+    <path d="M50 2 L60.78 35.16 L95.65 35.16 L67.45 55.67 L78.21 88.83 L50 68.35 L21.79 88.83 L32.55 55.67 L4.35 35.16 L39.22 35.16 Z"/>
+  </symbol>
+</svg>
+
+<div class="wrap">
+
+  <header class="kit-head">
+    <p class="eyebrow">Brand Kit &middot; Social Assets</p>
+    <h1>The Kiwi Report</h1>
+    <p>A New Zealand news wire with Drudge bones &mdash; ink on paper, heavy rules, one siren red &mdash; and the Southern Cross as its mark. Every asset below is a scalable SVG, ready for profiles, banners and link previews.</p>
+  </header>
+
+  <!-- PALETTE -->
+  <section>
+    <p class="sec-label">Palette</p>
+    <div class="swatches">
+      <div class="sw"><div class="chip" style="background:#0b0b0c"></div><div class="lab"><b>Ink</b><span>#0B0B0C</span></div></div>
+      <div class="sw"><div class="chip" style="background:#ffffff;border-bottom:1px solid var(--line)"></div><div class="lab"><b>Paper</b><span>#FFFFFF</span></div></div>
+      <div class="sw"><div class="chip" style="background:#cc0000"></div><div class="lab"><b>Siren Red</b><span>#CC0000</span></div></div>
+      <div class="sw"><div class="chip" style="background:#ff3b30"></div><div class="lab"><b>Red / Dark</b><span>#FF3B30</span></div></div>
+      <div class="sw"><div class="chip" style="background:#6b6b70"></div><div class="lab"><b>Newsprint</b><span>#6B6B70</span></div></div>
+    </div>
+  </section>
+
+  <!-- TYPE -->
+  <section>
+    <p class="sec-label">Typography</p>
+    <div class="type">
+      <div class="row"><div class="k">Wordmark</div><div class="spec-xl">Kiwi Report</div></div>
+      <div class="row"><div class="k">Tagline</div><div class="spec-l">Front Page</div></div>
+      <div class="row"><div class="k">Label</div><div class="spec-m">Updated Every 10 Minutes</div></div>
+      <p class="note" style="margin-top:16px">Set in the system UI face &mdash; <b>San Francisco</b> on Apple devices &mdash; the same type as the live site, so nothing to license or embed. Weights 900 / 800 / 700, always uppercase, with wide tracking on labels.</p>
+    </div>
+  </section>
+
+  <!-- MARK -->
+  <section>
+    <p class="sec-label">The Mark &middot; Southern Cross</p>
+    <div class="grid two">
+      <div class="card square">
+        <div class="frame">
+          <svg class="art" viewBox="0 0 400 400" style="max-width:230px">
+            <g fill="#cc0000">
+              <use href="#tkr-star" x="150" y="18" width="100" height="100"/>
+              <use href="#tkr-star" x="278" y="150" width="100" height="100"/>
+              <use href="#tkr-star" x="160" y="282" width="100" height="100"/>
+              <use href="#tkr-star" x="22" y="152" width="100" height="100"/>
+              <use href="#tkr-star" x="238" y="104" width="58" height="58"/>
+            </g>
+          </svg>
+        </div>
+        <div class="meta"><div class="name">Southern Cross<small>Standalone glyph for overlays &amp; watermarks</small></div><div class="dims">SVG</div></div>
+      </div>
+      <div class="card square">
+        <div class="frame" style="background:#0b0b0c">
+          <svg class="art" viewBox="0 0 400 400" style="max-width:230px">
+            <g fill="#ff2b2b">
+              <use href="#tkr-star" x="150" y="18" width="100" height="100"/>
+              <use href="#tkr-star" x="278" y="150" width="100" height="100"/>
+              <use href="#tkr-star" x="160" y="282" width="100" height="100"/>
+              <use href="#tkr-star" x="22" y="152" width="100" height="100"/>
+              <use href="#tkr-star" x="238" y="104" width="58" height="58"/>
+            </g>
+          </svg>
+        </div>
+        <div class="meta"><div class="name">On Ink<small>Brighter red holds up on dark grounds</small></div><div class="dims">SVG</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AVATARS -->
+  <section>
+    <p class="sec-label">Profile Avatar</p>
+    <div class="grid two">
+      <div class="card square">
+        <div class="frame">
+          <svg class="art" viewBox="0 0 1000 1000">
+            <rect width="1000" height="1000" fill="#ffffff"/>
+            <rect x="46" y="46" width="908" height="908" fill="none" stroke="#0b0b0c" stroke-width="14"/>
+            <rect x="74" y="74" width="852" height="852" fill="none" stroke="#0b0b0c" stroke-width="3"/>
+            <g fill="#cc0000">
+              <use href="#tkr-star" x="465" y="150" width="70" height="70"/>
+              <use href="#tkr-star" x="465" y="320" width="70" height="70"/>
+              <use href="#tkr-star" x="368" y="235" width="70" height="70"/>
+              <use href="#tkr-star" x="562" y="235" width="70" height="70"/>
+              <use href="#tkr-star" x="545" y="196" width="40" height="40"/>
+            </g>
+            <line x1="180" y1="452" x2="820" y2="452" stroke="#0b0b0c" stroke-width="4"/>
+            <text x="500" y="540" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="46" font-weight="700" letter-spacing="18" fill="#0b0b0c">THE</text>
+            <text x="500" y="700" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="168" font-weight="900" letter-spacing="2" fill="#0b0b0c">KIWI</text>
+            <text x="500" y="788" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="70" font-weight="800" letter-spacing="20" fill="#0b0b0c">REPORT</text>
+            <rect x="454" y="828" width="92" height="8" fill="#cc0000"/>
+            <text x="500" y="892" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="30" font-weight="600" letter-spacing="9" fill="#6b6b70">AOTEAROA &middot; NEW ZEALAND</text>
+          </svg>
+        </div>
+        <div class="meta"><div class="name">Avatar &mdash; Light<small>X, Instagram, Facebook profile</small></div><div class="dims">1000 &times; 1000</div></div>
+      </div>
+      <div class="card square">
+        <div class="frame" style="background:#0b0b0c">
+          <svg class="art" viewBox="0 0 1000 1000">
+            <rect width="1000" height="1000" fill="#0b0b0c"/>
+            <rect x="46" y="46" width="908" height="908" fill="none" stroke="#ffffff" stroke-width="14"/>
+            <rect x="74" y="74" width="852" height="852" fill="none" stroke="#ffffff" stroke-width="3"/>
+            <g fill="#ff2b2b">
+              <use href="#tkr-star" x="465" y="150" width="70" height="70"/>
+              <use href="#tkr-star" x="465" y="320" width="70" height="70"/>
+              <use href="#tkr-star" x="368" y="235" width="70" height="70"/>
+              <use href="#tkr-star" x="562" y="235" width="70" height="70"/>
+              <use href="#tkr-star" x="545" y="196" width="40" height="40"/>
+            </g>
+            <line x1="180" y1="452" x2="820" y2="452" stroke="#ffffff" stroke-width="4"/>
+            <text x="500" y="540" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="46" font-weight="700" letter-spacing="18" fill="#ffffff">THE</text>
+            <text x="500" y="700" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="168" font-weight="900" letter-spacing="2" fill="#ffffff">KIWI</text>
+            <text x="500" y="788" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="70" font-weight="800" letter-spacing="20" fill="#ffffff">REPORT</text>
+            <rect x="454" y="828" width="92" height="8" fill="#ff2b2b"/>
+            <text x="500" y="892" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="30" font-weight="600" letter-spacing="9" fill="#9a9aa0">AOTEAROA &middot; NEW ZEALAND</text>
+          </svg>
+        </div>
+        <div class="meta"><div class="name">Avatar &mdash; Dark<small>For light timelines &amp; app icons</small></div><div class="dims">1000 &times; 1000</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BANNER -->
+  <section>
+    <p class="sec-label">Social Banner</p>
+    <div class="card">
+      <div class="frame" style="padding:0">
+        <svg class="art" viewBox="0 0 1500 500" style="border-radius:0">
+          <rect width="1500" height="500" fill="#ffffff"/>
+          <g stroke="#e4e4e6" stroke-width="2">
+            <line x1="70" y1="60" x2="70" y2="440"/><line x1="110" y1="60" x2="110" y2="440"/><line x1="150" y1="60" x2="150" y2="440"/>
+            <line x1="1350" y1="60" x2="1350" y2="440"/><line x1="1390" y1="60" x2="1390" y2="440"/><line x1="1430" y1="60" x2="1430" y2="440"/>
+          </g>
+          <g fill="#cc0000">
+            <use href="#tkr-star" x="716" y="66" width="42" height="42"/>
+            <use href="#tkr-star" x="792" y="145" width="42" height="42"/>
+            <use href="#tkr-star" x="716" y="145" width="42" height="42"/>
+            <use href="#tkr-star" x="666" y="145" width="42" height="42"/>
+            <use href="#tkr-star" x="783" y="122" width="24" height="24"/>
+          </g>
+          <text x="750" y="300" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="118" font-weight="900" letter-spacing="6" fill="#0b0b0c">THE KIWI REPORT</text>
+          <line x1="430" y1="342" x2="1070" y2="342" stroke="#0b0b0c" stroke-width="3"/>
+          <text x="750" y="392" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="30" font-weight="700" letter-spacing="12" fill="#0b0b0c">NEW ZEALAND'S FRONT PAGE</text>
+          <text x="750" y="430" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="21" font-weight="600" letter-spacing="5" fill="#6b6b70">FULLY AUTOMATED &middot; UPDATED EVERY 10 MINUTES</text>
+        </svg>
+      </div>
+      <div class="meta"><div class="name">Header Banner<small>X / Twitter &amp; LinkedIn cover &mdash; content kept clear of the avatar corner</small></div><div class="dims">1500 &times; 500</div></div>
+    </div>
+  </section>
+
+  <!-- OG CARD -->
+  <section>
+    <p class="sec-label">Link Preview &middot; Open Graph</p>
+    <div class="card">
+      <div class="frame" style="padding:0">
+        <svg class="art" viewBox="0 0 1200 630" style="border-radius:0">
+          <rect width="1200" height="630" fill="#ffffff"/>
+          <rect x="40" y="40" width="1120" height="550" fill="none" stroke="#0b0b0c" stroke-width="3"/>
+          <g fill="#cc0000">
+            <use href="#tkr-star" x="579" y="78" width="42" height="42"/>
+            <use href="#tkr-star" x="655" y="157" width="42" height="42"/>
+            <use href="#tkr-star" x="579" y="157" width="42" height="42"/>
+            <use href="#tkr-star" x="529" y="157" width="42" height="42"/>
+            <use href="#tkr-star" x="646" y="134" width="24" height="24"/>
+          </g>
+          <text x="600" y="300" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="96" font-weight="900" letter-spacing="5" fill="#0b0b0c">THE KIWI REPORT</text>
+          <rect x="546" y="330" width="108" height="8" fill="#cc0000"/>
+          <text x="600" y="418" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="44" font-weight="800" letter-spacing="2" fill="#0b0b0c">NEW ZEALAND'S HEADLINES,</text>
+          <text x="600" y="470" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="44" font-weight="800" letter-spacing="2" fill="#0b0b0c">RANKED BY THE WIRES.</text>
+          <rect x="40" y="536" width="1120" height="54" fill="#0b0b0c"/>
+          <text x="600" y="572" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="23" font-weight="700" letter-spacing="6" fill="#ffffff">FULLY AUTOMATED &middot; UPDATED EVERY 10 MINUTES</text>
+        </svg>
+      </div>
+      <div class="meta"><div class="name">Share Card<small>The image that appears when the site is linked in chats &amp; posts</small></div><div class="dims">1200 &times; 630</div></div>
+    </div>
+  </section>
+
+  <!-- FAVICON -->
+  <section>
+    <p class="sec-label">Favicon &middot; App Icon</p>
+    <div class="card">
+      <div class="frame">
+        <div class="fav-live">
+          <div class="u">
+            <svg width="96" height="96" viewBox="0 0 64 64">
+              <rect width="64" height="64" rx="13" fill="#0b0b0c"/>
+              <rect x="5" y="5" width="54" height="54" rx="9" fill="none" stroke="#ffffff" stroke-width="2"/>
+              <text x="32" y="42" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display',Arial,sans-serif" font-size="30" font-weight="900" letter-spacing="-1.5" fill="#ffffff">KR</text>
+              <rect x="21" y="48" width="22" height="4" fill="#ff2b2b"/>
+            </svg>
+            <span>96 px</span>
+          </div>
+          <div class="u">
+            <svg width="48" height="48" viewBox="0 0 64 64">
+              <rect width="64" height="64" rx="13" fill="#0b0b0c"/>
+              <rect x="5" y="5" width="54" height="54" rx="9" fill="none" stroke="#ffffff" stroke-width="2"/>
+              <text x="32" y="42" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display',Arial,sans-serif" font-size="30" font-weight="900" letter-spacing="-1.5" fill="#ffffff">KR</text>
+              <rect x="21" y="48" width="22" height="4" fill="#ff2b2b"/>
+            </svg>
+            <span>48 px</span>
+          </div>
+          <div class="u">
+            <svg width="32" height="32" viewBox="0 0 64 64">
+              <rect width="64" height="64" rx="13" fill="#0b0b0c"/>
+              <rect x="5" y="5" width="54" height="54" rx="9" fill="none" stroke="#ffffff" stroke-width="2"/>
+              <text x="32" y="42" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display',Arial,sans-serif" font-size="30" font-weight="900" letter-spacing="-1.5" fill="#ffffff">KR</text>
+              <rect x="21" y="48" width="22" height="4" fill="#ff2b2b"/>
+            </svg>
+            <span>32 px</span>
+          </div>
+          <div class="u">
+            <svg width="16" height="16" viewBox="0 0 64 64">
+              <rect width="64" height="64" rx="13" fill="#0b0b0c"/>
+              <text x="32" y="44" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display',Arial,sans-serif" font-size="34" font-weight="900" letter-spacing="-2" fill="#ffffff">KR</text>
+              <rect x="19" y="50" width="26" height="5" fill="#ff2b2b"/>
+            </svg>
+            <span>16 px</span>
+          </div>
+        </div>
+      </div>
+      <div class="meta"><div class="name">KR Monogram<small>Browser tab &amp; home-screen icon &mdash; legible down to 16 px</small></div><div class="dims">SVG</div></div>
+    </div>
+  </section>
+
+  <!-- FILES -->
+  <section>
+    <p class="sec-label">The Files</p>
+    <div class="files">
+      <ul>
+        <li><code>brand/avatar.svg</code> <span class="use">Profile picture &mdash; 1000 &times; 1000</span></li>
+        <li><code>brand/avatar-dark.svg</code> <span class="use">Dark profile variant</span></li>
+        <li><code>brand/banner.svg</code> <span class="use">X / LinkedIn header &mdash; 1500 &times; 500</span></li>
+        <li><code>brand/og-card.svg</code> <span class="use">Link-preview image &mdash; 1200 &times; 630</span></li>
+        <li><code>brand/favicon.svg</code> <span class="use">Tab &amp; app icon</span></li>
+        <li><code>brand/mark-southern-cross.svg</code> <span class="use">Standalone mark</span></li>
+      </ul>
+      <p class="note">All six live in your <code>kiwi-report/brand/</code> folder. SVGs are perfect for the favicon and for uploading to most platforms. A few social networks still want a raster <b>PNG/JPG</b> for avatars and the Open Graph card &mdash; say the word and I'll export those at the exact pixel sizes, and wire the favicon + share-card tags straight into the site's <code>&lt;head&gt;</code>.</p>
+    </div>
+  </section>
+
+</div>

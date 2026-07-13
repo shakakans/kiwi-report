@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 500" role="img" aria-label="The Kiwi Report banner">
+  <defs>
+    <symbol id="s" viewBox="0 0 100 100">
+      <path d="M50 2 L60.78 35.16 L95.65 35.16 L67.45 55.67 L78.21 88.83 L50 68.35 L21.79 88.83 L32.55 55.67 L4.35 35.16 L39.22 35.16 Z"/>
+    </symbol>
+  </defs>
+  <rect width="1500" height="500" fill="#ffffff"/>
+  <g stroke="#e4e4e6" stroke-width="2">
+    <line x1="70" y1="60" x2="70" y2="440"/>
+    <line x1="110" y1="60" x2="110" y2="440"/>
+    <line x1="150" y1="60" x2="150" y2="440"/>
+    <line x1="1350" y1="60" x2="1350" y2="440"/>
+    <line x1="1390" y1="60" x2="1390" y2="440"/>
+    <line x1="1430" y1="60" x2="1430" y2="440"/>
+  </g>
+  <g fill="#cc0000">
+    <use href="#s" x="716" y="66"  width="42" height="42"/>
+    <use href="#s" x="792" y="145" width="42" height="42"/>
+    <use href="#s" x="716" y="145" width="42" height="42"/>
+    <use href="#s" x="666" y="145" width="42" height="42"/>
+    <use href="#s" x="783" y="122" width="24" height="24"/>
+  </g>
+  <line x1="250" y1="140" x2="1250" y2="140" stroke="#0b0b0c" stroke-width="0"/>
+  <text x="750" y="300" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="118" font-weight="900" letter-spacing="6" fill="#0b0b0c">THE KIWI REPORT</text>
+  <line x1="430" y1="342" x2="1070" y2="342" stroke="#0b0b0c" stroke-width="3"/>
+  <text x="750" y="392" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="30" font-weight="700" letter-spacing="12" fill="#0b0b0c">NEW ZEALAND'S FRONT PAGE</text>
+  <text x="750" y="430" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="21" font-weight="600" letter-spacing="5" fill="#6b6b70">FULLY AUTOMATED · UPDATED EVERY 10 MINUTES</text>
+</svg>

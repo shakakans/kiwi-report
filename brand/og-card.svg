@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="The Kiwi Report">
+  <defs>
+    <symbol id="s" viewBox="0 0 100 100">
+      <path d="M50 2 L60.78 35.16 L95.65 35.16 L67.45 55.67 L78.21 88.83 L50 68.35 L21.79 88.83 L32.55 55.67 L4.35 35.16 L39.22 35.16 Z"/>
+    </symbol>
+  </defs>
+  <rect width="1200" height="630" fill="#ffffff"/>
+  <rect x="40" y="40" width="1120" height="550" fill="none" stroke="#0b0b0c" stroke-width="3"/>
+  <g fill="#cc0000">
+    <use href="#s" x="579" y="78"  width="42" height="42"/>
+    <use href="#s" x="655" y="157" width="42" height="42"/>
+    <use href="#s" x="579" y="157" width="42" height="42"/>
+    <use href="#s" x="529" y="157" width="42" height="42"/>
+    <use href="#s" x="646" y="134" width="24" height="24"/>
+  </g>
+  <text x="600" y="300" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="96" font-weight="900" letter-spacing="5" fill="#0b0b0c">THE KIWI REPORT</text>
+  <rect x="546" y="330" width="108" height="8" fill="#cc0000"/>
+  <text x="600" y="418" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="44" font-weight="800" letter-spacing="2" fill="#0b0b0c">NEW ZEALAND'S HEADLINES,</text>
+  <text x="600" y="470" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',Arial,sans-serif" font-size="44" font-weight="800" letter-spacing="2" fill="#0b0b0c">RANKED BY THE WIRES.</text>
+  <rect x="40" y="536" width="1120" height="54" fill="#0b0b0c"/>
+  <text x="600" y="572" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif" font-size="23" font-weight="700" letter-spacing="6" fill="#ffffff">FULLY AUTOMATED · UPDATED EVERY 10 MINUTES</text>
+</svg>
