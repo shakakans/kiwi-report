@@ -48,7 +48,8 @@ function renderItem(item) {
 function renderPage(state) {
   if (!state.updatedAt) {
     return `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="5">
-      <title>THE KIWI REPORT</title><link rel="stylesheet" href="/style.css"></head>
+      <title>THE KIWI REPORT</title><link rel="stylesheet" href="/style.css">
+      <link rel="icon" href="/favicon.svg" type="image/svg+xml"></head>
       <body><div class="loading">PULLING THE KIWI WIRES&hellip;<br><span>first fetch in progress, page reloads automatically</span></div></body></html>`;
   }
 
@@ -79,6 +80,7 @@ function renderPage(state) {
 <meta http-equiv="refresh" content="300">
 <title>THE KIWI REPORT</title>
 <link rel="stylesheet" href="/style.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 </head>
 <body>
 <header>

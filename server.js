@@ -25,6 +25,12 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  if (url === '/favicon.svg' || url === '/favicon.ico') {
+    res.writeHead(200, { 'Content-Type': 'image/svg+xml' });
+    res.end(fs.readFileSync(path.join(__dirname, 'public', 'favicon.svg')));
+    return;
+  }
+
   if (url === '/') {
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
     res.end(renderPage(getState()));
