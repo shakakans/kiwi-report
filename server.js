@@ -1,33 +1,54 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const querystring = require('querystring');
 const { refresh, getState, REFRESH_MS } = require('./aggregator');
-const { renderPage, renderAdmin } = require('./render');
+const { renderPage, renderArticle, renderAdmin, renderLogin } = require('./render');
+const articles = require('./articles');
 
 const PORT = process.env.PORT || 3100;
 
-// --- Editor's override (the /admin control room) --------------------
-// Persisted to a small json file so it survives a process restart.
-// Note: on Render's free tier the disk is wiped on redeploy, so the
-// override also clears then — acceptable for a breaking-news banner.
-const OVERRIDE_PATH = path.join(__dirname, 'override.json');
-let override = { active: false, title: '', link: '', image: '' };
-try { override = { ...override, ...JSON.parse(fs.readFileSync(OVERRIDE_PATH, 'utf8')) } } catch {}
-
-function saveOverride() {
-  try { fs.writeFileSync(OVERRIDE_PATH, JSON.stringify(override, null, 2)); }
-  catch (err) { console.error('[override] could not persist:', err.message); }
-}
-
-// With ADMIN_KEY set (Render -> Environment), the key gates /admin.
-// Without it, /admin only works from localhost so a fresh deploy is
-// never left open to defacement.
+// --- Control room auth ----------------------------------------------
+// With ADMIN_KEY set (Render -> Environment), /admin shows a password
+// form; a correct password sets a session cookie. Without ADMIN_KEY,
+// /admin only works on localhost so a fresh deploy is never left open.
 const ADMIN_KEY = process.env.ADMIN_KEY || null;
-function adminAllowed(req, key) {
-  if (ADMIN_KEY) return key === ADMIN_KEY;
+const SESSION = ADMIN_KEY
+  ? crypto.createHmac('sha256', ADMIN_KEY).update('kiwi-session').digest('hex')
+  : null;
+
+function isLocalhost(req) {
   const host = String(req.headers.host || '').split(':')[0];
   return host === 'localhost' || host === '127.0.0.1';
+}
+
+function isAuthed(req) {
+  if (!ADMIN_KEY) return isLocalhost(req);
+  const cookies = String(req.headers.cookie || '').split(/;\s*/);
+  return cookies.includes('kr_admin=' + SESSION);
+}
+
+function sessionCookie(clear) {
+  return `kr_admin=${clear ? '' : SESSION}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${clear ? 0 : 60 * 60 * 24 * 30}`;
+}
+
+function readBody(req, cb) {
+  let body = '';
+  req.on('data', c => { body += c; if (body.length > 100000) req.destroy(); });
+  req.on('end', () => cb(querystring.parse(body)));
+}
+
+function redirect(res, to, cookie) {
+  const headers = { Location: to };
+  if (cookie) headers['Set-Cookie'] = cookie;
+  res.writeHead(302, headers);
+  res.end();
+}
+
+function html(res, code, page) {
+  res.writeHead(code, { 'Content-Type': 'text/html; charset=utf-8' });
+  res.end(page);
 }
 
 // Self-running: refresh on boot, then on an interval forever.
@@ -36,6 +57,7 @@ setInterval(() => refresh().catch(err => console.error('[refresh] failed:', err.
 
 const server = http.createServer((req, res) => {
   const url = (req.url || '/').split('?')[0];
+  const query = querystring.parse((req.url || '').split('?')[1] || '');
 
   if (url === '/api/data') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -55,41 +77,79 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  if (url === '/admin' && req.method === 'POST') {
-    let body = '';
-    req.on('data', c => { body += c; if (body.length > 10000) req.destroy(); });
-    req.on('end', () => {
-      const q = querystring.parse(body);
-      const key = String(q.key || '').trim();
-      if (!adminAllowed(req, key)) {
-        res.writeHead(403, { 'Content-Type': 'text/html; charset=utf-8' });
-        res.end(renderAdmin(override, { allowed: false, keyConfigured: !!ADMIN_KEY, key: '', saved: false }));
-        return;
+  // Editor article pages.
+  if (url.startsWith('/post/')) {
+    const a = articles.get(url.slice('/post/'.length));
+    if (a && (a.active || isAuthed(req))) { html(res, 200, renderArticle(a)); return; }
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('NOT FOUND');
+    return;
+  }
+
+  // --- Control room ---------------------------------------------------
+
+  if (url === '/admin/login' && req.method === 'POST') {
+    readBody(req, q => {
+      if (ADMIN_KEY && String(q.password || '') === ADMIN_KEY) {
+        redirect(res, '/admin', sessionCookie(false));
+      } else {
+        html(res, 403, renderLogin({ error: true, keyConfigured: !!ADMIN_KEY }));
       }
-      override.title = String(q.title || '').trim().slice(0, 200);
-      override.link = String(q.link || '').trim().slice(0, 500);
-      override.image = String(q.image || '').trim().slice(0, 500);
-      override.active = q.action === 'on' && override.title.length > 0;
-      saveOverride();
-      console.log(`[override] ${override.active ? 'LIVE' : 'off'}: "${override.title}"`);
-      res.writeHead(302, { Location: '/admin?saved=1&key=' + encodeURIComponent(key) });
-      res.end();
     });
     return;
   }
 
-  if (url === '/admin') {
-    const q = querystring.parse((req.url || '').split('?')[1] || '');
-    const key = String(q.key || '').trim();
-    const allowed = adminAllowed(req, key);
-    res.writeHead(allowed ? 200 : 403, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end(renderAdmin(override, { allowed, keyConfigured: !!ADMIN_KEY, key, saved: !!q.saved }));
+  if (url === '/admin/logout' && req.method === 'POST') {
+    redirect(res, '/admin', sessionCookie(true));
+    return;
+  }
+
+  if (url === '/admin' && req.method === 'GET') {
+    // The old bookmark style (?key=...) still logs you in once.
+    if (!isAuthed(req) && ADMIN_KEY && String(query.key || '') === ADMIN_KEY) {
+      redirect(res, '/admin', sessionCookie(false));
+      return;
+    }
+    if (!isAuthed(req)) {
+      html(res, ADMIN_KEY ? 200 : 403, renderLogin({ keyConfigured: !!ADMIN_KEY }));
+      return;
+    }
+    const editing = query.edit ? articles.get(String(query.edit)) : null;
+    html(res, 200, renderAdmin(articles.list(), { editing, saved: !!query.saved }));
+    return;
+  }
+
+  if ((url === '/admin/save' || url === '/admin/toggle' || url === '/admin/delete') && req.method === 'POST') {
+    if (!isAuthed(req)) {
+      html(res, 403, renderLogin({ keyConfigured: !!ADMIN_KEY }));
+      return;
+    }
+    readBody(req, q => {
+      if (url === '/admin/save') {
+        const title = String(q.title || '').trim().slice(0, 200);
+        if (!title) { redirect(res, '/admin'); return; }
+        const a = articles.upsert({
+          id: String(q.id || '').trim() || null,
+          title,
+          body: String(q.body || '').trim().slice(0, 50000),
+          image: String(q.image || '').trim().slice(0, 500),
+          link: String(q.link || '').trim().slice(0, 500),
+          active: q.active === 'on',
+          siren: q.siren === 'on'
+        });
+        console.log(`[articles] saved "${a.title}"${a.siren ? ' (SIREN)' : ''}${a.active ? '' : ' (hidden)'}`);
+      } else if (url === '/admin/toggle') {
+        articles.toggle(String(q.id || ''), q.field === 'siren' ? 'siren' : 'active');
+      } else {
+        articles.remove(String(q.id || ''));
+      }
+      redirect(res, '/admin?saved=1');
+    });
     return;
   }
 
   if (url === '/') {
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end(renderPage(getState(), override));
+    html(res, 200, renderPage(getState(), { siren: articles.siren(), posts: articles.activePosts() }));
     return;
   }
 

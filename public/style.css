@@ -179,13 +179,66 @@ footer hr { border: none; border-top: 3px solid var(--rule); }
 .mainhl.ovr:hover { color: var(--fg); }
 span.mainhl.ovr { cursor: default; text-decoration: none; }
 
+/* Editor article pages */
+.post { max-width: 680px; margin: 0 auto; padding-top: 14px; }
+.postbrand { text-align: center; font-size: 13px; font-weight: 700; letter-spacing: 3px; }
+.postbrand a { text-decoration: none; border-bottom: 3px solid var(--rule); padding-bottom: 4px; }
+.posthl {
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin: 26px 0 6px;
+}
+.postmeta { margin-bottom: 18px; }
+.postimg { width: 100%; border: 1px solid var(--rule); margin: 12px 0; filter: saturate(.9); }
+.post p { font-size: 17px; line-height: 1.65; }
+.postback { margin-top: 30px; font-size: 13px; font-weight: 700; letter-spacing: 1px; }
+
 /* /admin control room */
 .adminbox {
-  max-width: 560px;
-  margin: 0 auto;
+  max-width: 680px;
+  margin: 0 auto 22px;
   border: 1px solid var(--rule);
   padding: 22px 26px 26px;
 }
+.loginbox { max-width: 400px; }
+.adminerror { color: var(--red); font-size: 12px; font-weight: 700; letter-spacing: 1px; }
+.adminbox input[type="password"] {
+  width: 100%;
+  font-family: inherit;
+  font-size: 17px;
+  padding: 10px;
+  border: 1px solid var(--rule);
+  background: var(--bg);
+  color: var(--fg);
+}
+.adminchecks { display: flex; gap: 26px; flex-wrap: wrap; margin-top: 16px; }
+.adminchecks label { font-size: 12px; font-weight: 700; letter-spacing: 1px; display: flex; gap: 7px; align-items: center; }
+
+.postlist { list-style: none; margin: 0; padding: 0; }
+.postrow { border-top: 1px solid var(--rule); padding: 13px 0; }
+.postrow:first-child { border-top: none; }
+.postrowtop { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.chips { display: inline-flex; gap: 6px; }
+.chip {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 1px;
+  border: 1px solid var(--muted); color: var(--muted);
+  padding: 1px 6px; border-radius: 3px; white-space: nowrap;
+}
+.chip.live { border-color: #1a8a3c; color: #1a8a3c; }
+.chip.siren { border-color: var(--red); color: var(--red); }
+.rowbtns { display: flex; gap: 8px; margin-top: 9px; flex-wrap: wrap; align-items: center; }
+.rowbtns form { display: inline; }
+.rowbtn {
+  font-family: inherit;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 1px;
+  border: 1px solid var(--fg); background: var(--bg); color: var(--fg);
+  padding: 4px 10px; cursor: pointer; text-decoration: none; display: inline-block;
+}
+.rowbtn.danger { border-color: var(--red); color: var(--red); }
+.rowbtn.cancel { flex: 1; text-align: center; padding: 12px 0; font-size: 13px; letter-spacing: 2px; }
+.logoutform { text-align: center; margin: 10px 0 30px; }
 .adminstatus { letter-spacing: 3px; font-size: 13px; font-weight: 700; text-align: center; }
 .adminstatus .live { color: var(--red); }
 .adminbox label {
@@ -205,7 +258,7 @@ span.mainhl.ovr { cursor: default; text-decoration: none; }
   background: var(--bg);
   color: var(--fg);
 }
-.adminbox textarea { text-transform: uppercase; font-weight: 700; }
+.adminbox textarea[name="title"] { text-transform: uppercase; font-weight: 700; }
 .adminbtns { display: flex; gap: 12px; margin-top: 20px; }
 .adminbtns button {
   flex: 1;
