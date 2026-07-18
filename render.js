@@ -45,7 +45,29 @@ function renderItem(item) {
   </li>`;
 }
 
-function renderPage(state) {
+// Only ever emit http(s) URLs into the page — blocks javascript: etc.
+function safeUrl(u) {
+  return /^https?:\/\//i.test(u || '') ? u : null;
+}
+
+// The editor's override siren, shown instead of the algorithm's pick.
+function renderOverrideSiren(ov) {
+  const link = safeUrl(ov.link);
+  const image = safeUrl(ov.image);
+  const headline = link
+    ? `<a class="mainhl ovr" href="${esc(link)}" target="_blank" rel="noopener">${esc(ov.title)}</a>`
+    : `<span class="mainhl ovr">${esc(ov.title)}</span>`;
+  return `<div class="siren">
+    ${image ? (link
+      ? `<a href="${esc(link)}" target="_blank" rel="noopener"><img class="mainimg" src="${esc(image)}" alt=""></a>`
+      : `<img class="mainimg" src="${esc(image)}" alt="">`) : ''}
+    ${headline}
+    <div class="mainmeta">&#9733; EDITOR'S PICK &#9733;</div>
+  </div>`;
+}
+
+function renderPage(state, override) {
+  const ovActive = !!(override && override.active && override.title);
   if (!state.updatedAt) {
     return `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="5">
       <title>THE KIWI REPORT</title><link rel="stylesheet" href="/style.css">
@@ -53,7 +75,10 @@ function renderPage(state) {
       <body><div class="loading">PULLING THE KIWI WIRES&hellip;<br><span>first fetch in progress, page reloads automatically</span></div></body></html>`;
   }
 
-  const { main, items, trendingTokens, sourceCount, updatedAt } = state;
+  const { main, trendingTokens, sourceCount, updatedAt } = state;
+  // When the override siren is up, the algorithm's top story still
+  // deserves the page — it leads the first column instead.
+  const items = ovActive ? [main, ...state.items] : state.items;
   items.forEach((item, rank) => { item.rank = rank; });
   const third = Math.ceil(items.length / 3);
   const cols = [items.slice(0, third), items.slice(third, third * 2), items.slice(third * 2)];
@@ -89,13 +114,13 @@ function renderPage(state) {
     <button id="themeToggle" title="toggle dark mode">&#9681;</button>
   </div>
 
-  <div class="siren">
+  ${ovActive ? renderOverrideSiren(override) : `<div class="siren">
     ${main.image ? `<a href="${esc(main.link)}" target="_blank" rel="noopener"><img class="mainimg" src="${esc(main.image)}" alt=""></a>` : ''}
     <a class="mainhl" href="${esc(main.link)}" target="_blank" rel="noopener">${esc(main.title)}</a>
     <div class="mainmeta">${esc(main.tag)}${main.also && main.also.length ? ' &middot; ALSO ' + main.also.slice(0, 4).map(esc).join(', ') : ''} &middot; ${main.heat} SOURCES ON THIS STORY${payBadge(main)}</div>
     ${main.related.length ? `<ul class="relatedlist">${main.related.map(r =>
       `<li><a href="${esc(r.link)}" target="_blank" rel="noopener">${esc(r.title)}</a> <span class="meta">${esc(r.tag)}${payBadge(r)}</span></li>`).join('')}</ul>` : ''}
-  </div>
+  </div>`}
 
   <h1 class="logo">THE KIWI REPORT</h1>
 
@@ -129,4 +154,52 @@ function renderPage(state) {
 </html>`;
 }
 
-module.exports = { renderPage };
+// The /admin control room: publish or clear the override siren.
+function renderAdmin(override, { allowed, keyConfigured, key, saved }) {
+  const body = !allowed
+    ? `<div class="adminbox">
+        <p class="adminstatus">ACCESS DENIED</p>
+        ${keyConfigured
+          ? `<p>Add your passcode to the address: <code>/admin?key=YOUR-PASSCODE</code></p>`
+          : `<p>No passcode is configured, so the control room only works on localhost.</p>
+             <p>To use it on the live site: in Render open your service &rarr; <b>Environment</b> &rarr; add
+             <code>ADMIN_KEY</code> with a passcode you choose &rarr; Save (it redeploys itself).
+             Then visit <code>/admin?key=YOUR-PASSCODE</code>.</p>`}
+      </div>`
+    : `<div class="adminbox">
+        <p class="adminstatus">OVERRIDE IS ${override.active ? '<b class="live">&#9679; LIVE</b>' : '<b>OFF</b>'}${saved ? ' &middot; SAVED' : ''}</p>
+        <form method="POST" action="/admin">
+          <input type="hidden" name="key" value="${esc(key)}">
+          <label>HEADLINE (required)</label>
+          <textarea name="title" rows="2" maxlength="200" placeholder="MASSIVE STORY BREAKS ACROSS NZ...">${esc(override.title)}</textarea>
+          <label>LINK (optional, https://...)</label>
+          <input type="url" name="link" value="${esc(override.link)}" placeholder="https://">
+          <label>IMAGE URL (optional, https://...)</label>
+          <input type="url" name="image" value="${esc(override.image)}" placeholder="https://">
+          <div class="adminbtns">
+            <button type="submit" name="action" value="on" class="btn-on">PUBLISH OVERRIDE</button>
+            <button type="submit" name="action" value="off" class="btn-off">TURN OFF</button>
+          </div>
+        </form>
+        <p class="adminnote">Publish replaces the big siren headline with yours; the wires' own top story
+        moves to the first column. Turn off hands the siren back to the algorithm. Values are kept for next time.
+        <a href="/" target="_blank">View the front page &rarr;</a></p>
+      </div>`;
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CONTROL ROOM &middot; THE KIWI REPORT</title>
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<h1 class="logo">CONTROL ROOM</h1>
+${body}
+</body>
+</html>`;
+}
+
+module.exports = { renderPage, renderAdmin };

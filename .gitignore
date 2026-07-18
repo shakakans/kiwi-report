@@ -3,4 +3,5 @@ node_modules/
 .env
 .env.*
 *.log
+override.json
 .claude/settings.local.json

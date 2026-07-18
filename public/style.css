@@ -174,6 +174,54 @@ a { color: var(--fg); }
 footer { text-align: center; font-size: 12.5px; letter-spacing: .5px; margin-top: 30px; }
 footer hr { border: none; border-top: 3px solid var(--rule); }
 
+/* Editor's override siren: always red, whether linked or not. */
+.mainhl.ovr { color: var(--red); }
+.mainhl.ovr:hover { color: var(--fg); }
+span.mainhl.ovr { cursor: default; text-decoration: none; }
+
+/* /admin control room */
+.adminbox {
+  max-width: 560px;
+  margin: 0 auto;
+  border: 1px solid var(--rule);
+  padding: 22px 26px 26px;
+}
+.adminstatus { letter-spacing: 3px; font-size: 13px; font-weight: 700; text-align: center; }
+.adminstatus .live { color: var(--red); }
+.adminbox label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin: 16px 0 4px;
+}
+.adminbox textarea, .adminbox input[type="url"] {
+  width: 100%;
+  font-family: inherit;
+  font-size: 15px;
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  background: var(--bg);
+  color: var(--fg);
+}
+.adminbox textarea { text-transform: uppercase; font-weight: 700; }
+.adminbtns { display: flex; gap: 12px; margin-top: 20px; }
+.adminbtns button {
+  flex: 1;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 12px 0;
+  cursor: pointer;
+  border: 1px solid var(--fg);
+}
+.btn-on { background: var(--red); border-color: var(--red) !important; color: #fff; }
+.btn-off { background: var(--bg); color: var(--fg); }
+.adminnote { font-size: 12.5px; color: var(--muted); margin-top: 18px; line-height: 1.5; }
+.adminnote a { color: var(--fg); }
+
 .loading {
   text-align: center;
   font-size: 22px;
