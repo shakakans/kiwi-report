@@ -174,10 +174,34 @@ a { color: var(--fg); }
 footer { text-align: center; font-size: 12.5px; letter-spacing: .5px; margin-top: 30px; }
 footer hr { border: none; border-top: 3px solid var(--rule); }
 
-/* Editor's override siren: always red, whether linked or not. */
-.mainhl.ovr { color: var(--red); }
-.mainhl.ovr:hover { color: var(--fg); }
-span.mainhl.ovr { cursor: default; text-decoration: none; }
+/* Editor's pinned siren: highlighter-yellow marker swipe. */
+.hltwrap { margin: 0 0 10px; }
+.mainhl.hlt {
+  display: inline;
+  color: #0b0b0c;
+  background: #ffe600;
+  padding: 2px 12px;
+  text-decoration: none;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.mainhl.hlt:hover { color: var(--red); background: #ffe600; }
+.kiwitag {
+  display: inline-block;
+  background: #ffe600;
+  color: #0b0b0c;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  padding: 3px 14px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .kiwitag { animation: markerpulse 1.6s ease-in-out infinite; }
+  @keyframes markerpulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 230, 0, 0); }
+    50% { box-shadow: 0 0 0 7px rgba(255, 230, 0, .4); }
+  }
+}
 
 /* Editor article pages */
 .post { max-width: 680px; margin: 0 auto; padding-top: 14px; }

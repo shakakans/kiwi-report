@@ -66,13 +66,14 @@ function postAsItem(a) {
 }
 
 // The editor's siren header, shown instead of the algorithm's pick.
+// Highlighter-yellow treatment so a pinned story is unmissably ours.
 function renderEditorSiren(a) {
   const href = postHref(a);
   const image = safeUrl(a.image);
   return `<div class="siren">
     ${image ? `<a href="${esc(href)}" target="_blank" rel="noopener"><img class="mainimg" src="${esc(image)}" alt=""></a>` : ''}
-    <a class="mainhl ovr" href="${esc(href)}" target="_blank" rel="noopener">${esc(a.title)}</a>
-    <div class="mainmeta">&#9733; EDITOR'S PICK &#9733;</div>
+    <div class="hltwrap"><a class="mainhl hlt" href="${esc(href)}" target="_blank" rel="noopener">${esc(a.title)}</a></div>
+    <div class="mainmeta"><span class="kiwitag">&#9733; KIWI REPORT &#9733;</span></div>
   </div>`;
 }
 
