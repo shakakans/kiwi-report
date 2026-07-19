@@ -66,10 +66,19 @@ function postAsItem(a) {
 }
 
 // The editor's siren header, shown instead of the algorithm's pick.
-// Highlighter-yellow treatment so a pinned story is unmissably ours.
+// Highlighter-yellow treatment so a pinned story is unmissably ours;
+// emergency mode goes full red-alert with pulsing beacon lights.
 function renderEditorSiren(a) {
   const href = postHref(a);
   const image = safeUrl(a.image);
+  if (a.emergency) {
+    return `<div class="siren emg">
+      <div class="beacons"><span class="beacon"></span><span class="brklabel">BREAKING NEWS</span><span class="beacon b2"></span></div>
+      ${image ? `<a href="${esc(href)}" target="_blank" rel="noopener"><img class="mainimg" src="${esc(image)}" alt=""></a>` : ''}
+      <div class="hltwrap"><a class="mainhl emg" href="${esc(href)}" target="_blank" rel="noopener">${esc(a.title)}</a></div>
+      <div class="mainmeta emgmeta">KIWI REPORT &middot; DEVELOPING STORY &middot; UPDATES EVERY 2 MIN</div>
+    </div>`;
+  }
   return `<div class="siren">
     ${image ? `<a href="${esc(href)}" target="_blank" rel="noopener"><img class="mainimg" src="${esc(image)}" alt=""></a>` : ''}
     <div class="hltwrap"><a class="mainhl hlt" href="${esc(href)}" target="_blank" rel="noopener">${esc(a.title)}</a></div>
@@ -113,15 +122,17 @@ function renderPage(state, editorial) {
   }
 
   const updated = new Date(updatedAt).toLocaleTimeString('en-NZ', { hour: 'numeric', minute: '2-digit', timeZone: 'Pacific/Auckland' });
+  const emg = !!(siren && siren.emergency);
 
   return `<!doctype html>
 <html lang="en">
 <head>
 ${HEAD}
-<meta http-equiv="refresh" content="300">
-<title>THE KIWI REPORT</title>
+<meta http-equiv="refresh" content="${emg ? 120 : 300}">
+<title>${emg ? 'BREAKING NEWS &middot; THE KIWI REPORT' : 'THE KIWI REPORT'}</title>
 </head>
-<body>
+<body${emg ? ' class="emergency"' : ''}>
+${emg ? '<div class="breakingbar"><span>&#9888; BREAKING NEWS &#9888;</span></div>' : ''}
 <header>
   <div class="topbar">
     <span class="updated">UPDATED ${esc(updated)} &middot; ${sourceCount} NZ WIRES LIVE &middot; AUTO-REFRESH 5 MIN</span>
@@ -240,7 +251,7 @@ function articleRow(a) {
       <b>${esc(a.title)}</b>
       <span class="chips">
         ${a.active ? '<span class="chip live">LIVE</span>' : '<span class="chip">HIDDEN</span>'}
-        ${a.siren ? '<span class="chip siren">&#9733; SIREN</span>' : ''}
+        ${a.emergency ? '<span class="chip emg">&#128680; EMERGENCY</span>' : a.siren ? '<span class="chip siren">&#9733; SIREN</span>' : ''}
       </span>
     </div>
     <span class="meta">${timeAgo(a.time)} &middot; ${a.body ? 'ARTICLE PAGE' : 'HEADLINE ONLY'}${safeUrl(a.link) ? ' &middot; LINKS OUT' : ''}</span>
@@ -249,6 +260,7 @@ function articleRow(a) {
       <a class="rowbtn" href="${esc(postHref(a))}" target="_blank" rel="noopener">VIEW</a>
       <form method="POST" action="/admin/toggle"><input type="hidden" name="id" value="${esc(a.id)}"><input type="hidden" name="field" value="active"><button class="rowbtn">${a.active ? 'HIDE' : 'GO LIVE'}</button></form>
       <form method="POST" action="/admin/toggle"><input type="hidden" name="id" value="${esc(a.id)}"><input type="hidden" name="field" value="siren"><button class="rowbtn">${a.siren ? 'DROP SIREN' : 'MAKE SIREN'}</button></form>
+      <form method="POST" action="/admin/toggle"><input type="hidden" name="id" value="${esc(a.id)}"><input type="hidden" name="field" value="emergency"><button class="rowbtn ${a.emergency ? '' : 'danger'}">${a.emergency ? 'STAND DOWN' : '&#128680; EMERGENCY'}</button></form>
       <form method="POST" action="/admin/delete" onsubmit="return confirm('Delete this article for good?')"><input type="hidden" name="id" value="${esc(a.id)}"><button class="rowbtn danger">DELETE</button></form>
     </div>
   </li>`;
@@ -256,7 +268,7 @@ function articleRow(a) {
 
 function renderAdmin(articles, opts) {
   const { editing, saved } = opts || {};
-  const a = editing || { id: '', title: '', body: '', image: '', link: '', active: true, siren: false };
+  const a = editing || { id: '', title: '', body: '', image: '', link: '', active: true, siren: false, emergency: false };
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -281,6 +293,7 @@ ${HEAD}
     <div class="adminchecks">
       <label><input type="checkbox" name="active"${a.active ? ' checked' : ''}> LIVE IN THE FEED</label>
       <label><input type="checkbox" name="siren"${a.siren ? ' checked' : ''}> &#9733; SIREN HEADER (replaces the big headline)</label>
+      <label><input type="checkbox" name="emergency"${a.emergency ? ' checked' : ''}> &#128680; EMERGENCY TAKEOVER (full breaking-news look: red-alert banner, beacons, rest of page goes black &amp; white)</label>
     </div>
     <div class="adminbtns">
       <button type="submit" class="btn-on">${editing ? 'SAVE CHANGES' : 'PUBLISH'}</button>

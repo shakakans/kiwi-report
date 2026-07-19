@@ -135,11 +135,13 @@ const server = http.createServer((req, res) => {
           image: String(q.image || '').trim().slice(0, 500),
           link: String(q.link || '').trim().slice(0, 500),
           active: q.active === 'on',
-          siren: q.siren === 'on'
+          siren: q.siren === 'on',
+          emergency: q.emergency === 'on'
         });
-        console.log(`[articles] saved "${a.title}"${a.siren ? ' (SIREN)' : ''}${a.active ? '' : ' (hidden)'}`);
+        console.log(`[articles] saved "${a.title}"${a.emergency ? ' (EMERGENCY)' : a.siren ? ' (SIREN)' : ''}${a.active ? '' : ' (hidden)'}`);
       } else if (url === '/admin/toggle') {
-        articles.toggle(String(q.id || ''), q.field === 'siren' ? 'siren' : 'active');
+        const field = ['siren', 'emergency'].includes(q.field) ? q.field : 'active';
+        articles.toggle(String(q.id || ''), field);
       } else {
         articles.remove(String(q.id || ''));
       }

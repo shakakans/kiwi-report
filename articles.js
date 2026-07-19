@@ -26,7 +26,7 @@ function get(id) {
 
 // Only one siren at a time: promoting an article demotes the others.
 function clearSiren() {
-  for (const a of articles) a.siren = false;
+  for (const a of articles) { a.siren = false; a.emergency = false; }
 }
 
 function upsert(data) {
@@ -40,8 +40,11 @@ function upsert(data) {
   a.image = data.image;
   a.link = data.link;
   a.active = data.active;
-  if (data.siren) clearSiren();
-  a.siren = data.siren;
+  // Emergency implies siren: it IS the header, just louder.
+  const wantSiren = data.siren || data.emergency;
+  if (wantSiren) clearSiren();
+  a.siren = wantSiren;
+  a.emergency = !!data.emergency;
   persist();
   return a;
 }
@@ -49,8 +52,15 @@ function upsert(data) {
 function toggle(id, field) {
   const a = get(id);
   if (!a) return;
-  if (field === 'siren' && !a.siren) clearSiren();
-  a[field] = !a[field];
+  if (field === 'emergency') {
+    if (a.emergency) { a.emergency = false; }          // calm down, stay siren
+    else { clearSiren(); a.siren = true; a.emergency = true; }
+  } else {
+    if (field === 'siren' && !a.siren) clearSiren();
+    a[field] = !a[field];
+    if (field === 'siren' && !a.siren) a.emergency = false;
+    if (field === 'active' && !a.active) a.emergency = false;
+  }
   persist();
 }
 
